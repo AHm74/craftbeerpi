@@ -31,7 +31,7 @@ class WifiSocket(ActorBase):
             h = httplib2.Http(".cache")
             #app.logger.error("SEND HTTP TO WIFI SOCKET %s %s %s" % (user, password, ip))
             ## Sending http command
-            #(resp_headers, content) = h.request("http://%s:%s@%s/smartplug.cgi" % (user,password,ip), "POST",  body=command, headers=self.headers)
+            (resp_headers, content) = h.request("http://%s:%s@%s/smartplug.cgi" % (user,password,ip), "POST",  body=command, headers=self.headers)
         except Exception as e:
             app.logger.error("WIFI_SOCKET ERROR" + str(e))
 
