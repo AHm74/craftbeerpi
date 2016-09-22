@@ -2,11 +2,13 @@ from brewapp import app
 from brewapp.base.actor import ActorBase
 from brewapp.base.model import *
 import httplib2
+from flask import request
+import base64
 
 class WifiSocket(ActorBase):
 
     # http header
-    headers = {'content-type': 'application/xml'}
+
     # Command so swtich wifi socket on
     onCommand = '<?xml version="1.0" encoding="utf-8"?><SMARTPLUG id="edimax"><CMD id="setup"><Device.System.Power.State>ON</Device.System.Power.State></CMD></SMARTPLUG>'
     # Command so swtich wifi socket off
@@ -29,13 +31,15 @@ class WifiSocket(ActorBase):
             user = app.brewapp_config['WIFI_SOCKET_USER']
             password = app.brewapp_config['WIFI_SOCKET_PASSWORD']
             h = httplib2.Http(".cache")
-            #app.logger.error("SEND HTTP TO WIFI SOCKET %s %s %s" % (user, password, ip))
             print "URL DATA"
             print user
             print password
             print ip
-            ## Sending http command
-            (resp_headers, content) = h.request("http://%s:%s@%s/smartplug.cgi" % (user,password,ip), "POST",  body=command, headers=self.headers)
+            auth = base64.encodestring( user + ':' + password )
+            headers = {'content-type': 'application/x-www-form-urlencoded', 'Authorization' : 'Basic ' + auth}
+            ## Sending http command ""
+            h.add_credentials( user, password)
+            (resp_headers, content) = h.request("http://%s/smartplug.cgi" % (ip), "POST",  body=command, headers=headers)
         except Exception as e:
             app.logger.error("WIFI_SOCKET ERROR" + str(e))
 
