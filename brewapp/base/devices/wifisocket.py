@@ -30,6 +30,10 @@ class WifiSocket(ActorBase):
             password = app.brewapp_config['WIFI_SOCKET_PASSWORD']
             h = httplib2.Http(".cache")
             #app.logger.error("SEND HTTP TO WIFI SOCKET %s %s %s" % (user, password, ip))
+            print "URL DATA"
+            print user
+            print password
+            print ip
             ## Sending http command
             (resp_headers, content) = h.request("http://%s:%s@%s/smartplug.cgi" % (user,password,ip), "POST",  body=command, headers=self.headers)
         except Exception as e:
